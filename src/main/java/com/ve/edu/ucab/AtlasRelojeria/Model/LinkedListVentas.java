@@ -63,7 +63,7 @@ public class LinkedListVentas {
   }
 
   /**
-   * Inserta en la lista al usuario
+   * Inserta en la lista a la venta
    * @param ventas que representa el nombre del usuario que hay que registrar en el sistema, es decir. insertar en la lista enlazada
    */
   public void insertar(Ventas ventas) {
