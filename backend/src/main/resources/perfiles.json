@@ -1,0 +1,43 @@
+[ {
+  "nombre" : "admin",
+  "id" : "1",
+  "edad" : 18,
+  "contrasena" : "123",
+  "esAdministrador" : true,
+  "listaDeseos" : [ ]
+}, {
+  "nombre" : "Isabella Napolitano",
+  "id" : "4536729",
+  "edad" : 12,
+  "contrasena" : "33333",
+  "esAdministrador" : false,
+  "listaDeseos" : [ ]
+}, {
+  "nombre" : "pauliss",
+  "id" : "22",
+  "edad" : 23,
+  "contrasena" : "1",
+  "esAdministrador" : false,
+  "listaDeseos" : [ "P9" ]
+}, {
+  "nombre" : "Franquito",
+  "id" : "11638096",
+  "edad" : 50,
+  "contrasena" : "123",
+  "esAdministrador" : false,
+  "listaDeseos" : [ ]
+}, {
+  "nombre" : "Isabella Napolitano",
+  "id" : "31045827",
+  "edad" : 19,
+  "contrasena" : "05102005",
+  "esAdministrador" : false,
+  "listaDeseos" : [ ]
+}, {
+  "nombre" : "daniel",
+  "id" : "30906270",
+  "edad" : 20,
+  "contrasena" : "123",
+  "esAdministrador" : false,
+  "listaDeseos" : [ "P1", "P3", "P4", "P9", "P10" ]
+} ]

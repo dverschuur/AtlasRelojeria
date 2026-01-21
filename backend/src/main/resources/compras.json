@@ -1,0 +1,22 @@
+[ {
+  "numeroDeCompra" : "C3",
+  "proveedor" : "Audemars Piguet",
+  "monto" : "1600000.0",
+  "producto" : "P9",
+  "cantidadDeProducto" : "4",
+  "fechaCompra" : [ 2025, 7, 8 ]
+}, {
+  "numeroDeCompra" : "C2",
+  "proveedor" : "Casio",
+  "monto" : "25.0",
+  "producto" : "P1",
+  "cantidadDeProducto" : "1",
+  "fechaCompra" : [ 2026, 1, 20 ]
+}, {
+  "numeroDeCompra" : "C3",
+  "proveedor" : "Casio",
+  "monto" : "25.0",
+  "producto" : "P1",
+  "cantidadDeProducto" : "1",
+  "fechaCompra" : [ 2026, 1, 20 ]
+} ]

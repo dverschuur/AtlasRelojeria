@@ -1,0 +1,65 @@
+[ {
+  "id" : "P1",
+  "nombre" : "Casio F91W",
+  "descripcion" : "Reloj digital resistente al aguita",
+  "precio" : 25.0,
+  "cantidad" : 10,
+  "imagen" : "casio1.jpg",
+  "proveedor" : "Casio"
+}, {
+  "id" : "P3",
+  "nombre" : "Swatch Originals",
+  "descripcion" : "Reloj para uso diario",
+  "precio" : 75.0,
+  "cantidad" : 19,
+  "imagen" : "P3.jpg",
+  "proveedor" : "Swatch"
+}, {
+  "id" : "P4",
+  "nombre" : "Montre Casio Vintage",
+  "descripcion" : "Relog digital, vintage",
+  "precio" : 70.0,
+  "cantidad" : 9,
+  "imagen" : "P4.png",
+  "proveedor" : "Casio"
+}, {
+  "id" : "P5",
+  "nombre" : "Casio vintage Gold",
+  "descripcion" : "Relog digital, vintage",
+  "precio" : 130.0,
+  "cantidad" : 8,
+  "imagen" : "P5.jpg",
+  "proveedor" : "Casio"
+}, {
+  "id" : "P7",
+  "nombre" : "Cartier Santos",
+  "descripcion" : "Reloj de Acero ideal para el dia a dia, resistente a golpes.",
+  "precio" : 7100.0,
+  "cantidad" : 4,
+  "imagen" : "P7.jpg",
+  "proveedor" : "Cartier"
+}, {
+  "id" : "P8",
+  "nombre" : "Jaeger LeCoultre Reverso",
+  "descripcion" : "Reloj de lujo ideal para momentos unicos",
+  "precio" : 4500.0,
+  "cantidad" : 7,
+  "imagen" : "P8.jpg",
+  "proveedor" : "Jaeger LeCoultre"
+}, {
+  "id" : "P9",
+  "nombre" : "Audemars Piguet Royal Oak",
+  "descripcion" : "Reloj prestioso, solo para ocasiones especiales",
+  "precio" : 400000.0,
+  "cantidad" : 4,
+  "imagen" : "P9.jpg",
+  "proveedor" : "Audemars Piguet"
+}, {
+  "id" : "P10",
+  "nombre" : "Omega Swatch",
+  "descripcion" : "Reloj deportivo para uso diario",
+  "precio" : 250.0,
+  "cantidad" : 10,
+  "imagen" : "P10.jpg",
+  "proveedor" : "Swatch"
+} ]

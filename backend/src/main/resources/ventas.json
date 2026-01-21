@@ -1,0 +1,267 @@
+[ {
+  "fecha" : [ 2025, 5, 26 ],
+  "monto" : 7100.0,
+  "idVenta" : "V001",
+  "idProducto" : "P7",
+  "idUsuario" : "4536729",
+  "direccion" : "el cafetal"
+}, {
+  "fecha" : [ 2025, 5, 26 ],
+  "monto" : 25.0,
+  "idVenta" : "V002",
+  "idProducto" : "P1",
+  "idUsuario" : "30906270",
+  "direccion" : "macaracuay"
+}, {
+  "fecha" : [ 2025, 5, 26 ],
+  "monto" : 400000.0,
+  "idVenta" : "V003",
+  "idProducto" : "P9",
+  "idUsuario" : "30906270",
+  "direccion" : "los palos grandes"
+}, {
+  "fecha" : [ 2025, 5, 26 ],
+  "monto" : 75.0,
+  "idVenta" : "V004",
+  "idProducto" : "P3",
+  "idUsuario" : "30906270",
+  "direccion" : "santa ines"
+}, {
+  "fecha" : [ 2025, 6, 14 ],
+  "monto" : 75.0,
+  "idVenta" : "V005",
+  "idProducto" : "P3",
+  "idUsuario" : "11638096",
+  "direccion" : "la boyera"
+}, {
+  "fecha" : [ 2025, 7, 6 ],
+  "monto" : 25.0,
+  "idVenta" : "V006",
+  "idProducto" : "P1",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 6 ],
+  "monto" : 130.0,
+  "idVenta" : "V007",
+  "idProducto" : "P5",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 6 ],
+  "monto" : 250.0,
+  "idVenta" : "V008",
+  "idProducto" : "P10",
+  "idUsuario" : "4536729",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 6 ],
+  "monto" : 7100.0,
+  "idVenta" : "V009",
+  "idProducto" : "P7",
+  "idUsuario" : "4536729",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 6 ],
+  "monto" : 7100.0,
+  "idVenta" : "V010",
+  "idProducto" : "P7",
+  "idUsuario" : "4536729",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 6 ],
+  "monto" : 75.0,
+  "idVenta" : "V011",
+  "idProducto" : "P3",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 6 ],
+  "monto" : 75.0,
+  "idVenta" : "V012",
+  "idProducto" : "P3",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 6 ],
+  "monto" : 70.0,
+  "idVenta" : "V013",
+  "idProducto" : "P4",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 6 ],
+  "monto" : 75.0,
+  "idVenta" : "V014",
+  "idProducto" : "P3",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 7 ],
+  "monto" : 4500.0,
+  "idVenta" : "V015",
+  "idProducto" : "P8",
+  "idUsuario" : "22",
+  "direccion" : "altamira"
+}, {
+  "fecha" : [ 2025, 7, 7 ],
+  "monto" : 400000.0,
+  "idVenta" : "V016",
+  "idProducto" : "P9",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 7 ],
+  "monto" : 400000.0,
+  "idVenta" : "V017",
+  "idProducto" : "P9",
+  "idUsuario" : "22",
+  "direccion" : "Caracas"
+}, {
+  "fecha" : [ 2025, 7, 7 ],
+  "monto" : 400000.0,
+  "idVenta" : "V018",
+  "idProducto" : "P9",
+  "idUsuario" : "22",
+  "direccion" : "Caracas"
+}, {
+  "fecha" : [ 2025, 7, 7 ],
+  "monto" : 400000.0,
+  "idVenta" : "V019",
+  "idProducto" : "P9",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 25.0,
+  "idVenta" : "V020",
+  "idProducto" : "P1",
+  "idUsuario" : "22",
+  "direccion" : "BLA"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 70.0,
+  "idVenta" : "V021",
+  "idProducto" : "P4",
+  "idUsuario" : "22",
+  "direccion" : "hola"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 75.0,
+  "idVenta" : "V022",
+  "idProducto" : "P3",
+  "idUsuario" : "22",
+  "direccion" : "hola"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 75.0,
+  "idVenta" : "V023",
+  "idProducto" : "P3",
+  "idUsuario" : "22",
+  "direccion" : "ass"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 70.0,
+  "idVenta" : "V024",
+  "idProducto" : "P4",
+  "idUsuario" : "22",
+  "direccion" : "hola"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 70.0,
+  "idVenta" : "V025",
+  "idProducto" : "P4",
+  "idUsuario" : "22",
+  "direccion" : "h"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 70.0,
+  "idVenta" : "V026",
+  "idProducto" : "P4",
+  "idUsuario" : "22",
+  "direccion" : "u"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 70.0,
+  "idVenta" : "V027",
+  "idProducto" : "P4",
+  "idUsuario" : "22",
+  "direccion" : "s"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 130.0,
+  "idVenta" : "V028",
+  "idProducto" : "P5",
+  "idUsuario" : "22",
+  "direccion" : "fff"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 70.0,
+  "idVenta" : "V029",
+  "idProducto" : "P4",
+  "idUsuario" : "22",
+  "direccion" : "ehuj"
+}, {
+  "fecha" : [ 2025, 7, 8 ],
+  "monto" : 70.0,
+  "idVenta" : "V030",
+  "idProducto" : "P4",
+  "idUsuario" : "22",
+  "direccion" : "holis"
+}, {
+  "fecha" : [ 2025, 7, 9 ],
+  "monto" : 75.0,
+  "idVenta" : "V031",
+  "idProducto" : "P3",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 9 ],
+  "monto" : 400000.0,
+  "idVenta" : "V032",
+  "idProducto" : "P9",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 9 ],
+  "monto" : 7100.0,
+  "idVenta" : "V033",
+  "idProducto" : "P7",
+  "idUsuario" : "30906270",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 9 ],
+  "monto" : 25.0,
+  "idVenta" : "V034",
+  "idProducto" : "P1",
+  "idUsuario" : "30906270",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 9 ],
+  "monto" : 4500.0,
+  "idVenta" : "V035",
+  "idProducto" : "P8",
+  "idUsuario" : "123",
+  "direccion" : "caracas"
+}, {
+  "fecha" : [ 2025, 7, 10 ],
+  "monto" : 70.0,
+  "idVenta" : "V036",
+  "idProducto" : "P4",
+  "idUsuario" : "22",
+  "direccion" : "el cafetal"
+}, {
+  "fecha" : [ 2025, 7, 10 ],
+  "monto" : 75.0,
+  "idVenta" : "V037",
+  "idProducto" : "P3",
+  "idUsuario" : "22",
+  "direccion" : "el cafetal"
+}, {
+  "fecha" : [ 2025, 7, 10 ],
+  "monto" : 7100.0,
+  "idVenta" : "V038",
+  "idProducto" : "P7",
+  "idUsuario" : "22",
+  "direccion" : "caracas"
+} ]
