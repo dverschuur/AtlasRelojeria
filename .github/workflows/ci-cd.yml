@@ -1,0 +1,28 @@
+name: Ecosistema SQA - Kernel Shield - Atlas Relojeria
+
+on:
+  push:
+    branches: [ "main", "dev" ]
+  pull_request:
+    branches: [ "main", "dev" ]
+
+jobs:
+  construccion-y-pruebas:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Descargar el código de Atlas Relojeria
+        uses: actions/checkout@v4
+
+      - name: 2. Preparar el entorno con Java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: 3. Compilar el Backend de Spring Boot
+        run: mvn -f backend/pom.xml clean compile
+
+      - name: 4. Ejecutar Pruebas Unitarias (Caja Blanca)
+        run: mvn -f backend/pom.xml test
