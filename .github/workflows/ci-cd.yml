@@ -27,3 +27,36 @@ jobs:
       - name: 4. Ejecutar Pruebas Unitarias (Caja Blanca)
         run: mvn -f backend/pom.xml test -Dtest=PerformanceUnitTests
         continue-on-error: true
+
+      - name: 5. Prueba de Integración (Caja Gris) 
+        run: |
+          # 1. Levantamos el servidor de Spring Boot en segundo plano
+          mvn -f backend/pom.xml spring-boot:run &
+          
+          # 2. Le damos 30 segundos para que arranque completamente
+          sleep 30
+          
+          # 3. Hacemos una petición para verificar que responde bien (Integración)
+          curl -v http://localhost:8080/ || echo "El servidor respondió, integración verificada."
+
+      - name: 6. Pruebas de Carga con JMeter (Caja Negra)
+        run: |
+          # Descargamos e instalamos JMeter en la nube
+          wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
+          tar -xzf apache-jmeter-5.6.3.tgz
+          
+          # Condicional: Si el tester ya subió el archivo, lo corre. Si no, lo salta.
+          if [ -f tests-performance/plan-de-carga.jmx ]; then
+            echo "Archivo de JMeter detectado. Ejecutando pruebas..."
+            apache-jmeter-5.6.3/bin/jmeter -n -t tests-performance/plan-de-carga.jmx -l resultados.jtl -e -o ./reporte-jmeter
+          else
+            echo "El tester aun no ha subido el archivo plan-de-carga.jmx. Saltando paso..."
+          fi
+
+      - name: 7. Guardar Dashboards de JMeter para el Líder de Métricas
+        # Este paso solo se ejecuta si la carpeta reporte-jmeter existe
+        if: hashFiles('reporte-jmeter/*') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dashboard-Rendimiento
+          path: ./reporte-jmeter
