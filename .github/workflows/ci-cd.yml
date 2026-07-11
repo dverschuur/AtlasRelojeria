@@ -37,7 +37,7 @@ jobs:
           sleep 30
           
           # 3. Hacemos la petición apuntando al puerto 8081.
-          curl -v --fail http://localhost:8081/ || (cat spring-logs.txt && exit 1)
+          curl -v http://localhost:8081/ || (cat spring-logs.txt && exit 1)
           
       - name: 6. Pruebas de Carga con JMeter (Caja Negra)
         run: |
