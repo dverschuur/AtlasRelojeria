@@ -34,7 +34,7 @@ jobs:
           mvn -f backend/pom.xml spring-boot:run > spring-logs.txt 2>&1 &
           
           # 2. Le damos 45 segundos para que arranque (las máquinas de GitHub pueden ser lentas)
-          sleep 45
+          sleep 90
           
           # 3. Hacemos la petición. Usamos --fail para que falle estrictamente si no hay respuesta.
           curl -v --fail http://localhost:8080/ || (cat spring-logs.txt && exit 1)
