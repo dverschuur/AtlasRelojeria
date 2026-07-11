@@ -27,17 +27,17 @@ jobs:
       - name: 4. Ejecutar Pruebas Unitarias (Caja Blanca)
         run: mvn -f backend/pom.xml test -Dtest=PerformanceUnitTests
         continue-on-error: true
-
-      - name: 5. Prueba de Integración (Caja Gris) 
+        
+      - name: 5. Prueba de Integración (Caja Gris) - Rol DevOp
         run: |
-          # 1. Levantamos el servidor de Spring Boot en segundo plano
-          mvn -f backend/pom.xml spring-boot:run &
+          # 1. Levantamos el servidor y guardamos el registro en un archivo de texto
+          mvn -f backend/pom.xml spring-boot:run > spring-logs.txt 2>&1 &
           
-          # 2. Le damos 30 segundos para que arranque completamente
-          sleep 30
+          # 2. Le damos 45 segundos para que arranque (las máquinas de GitHub pueden ser lentas)
+          sleep 45
           
-          # 3. Hacemos una petición para verificar que responde bien (Integración)
-          curl -v http://localhost:8080/ || echo "El servidor respondió, integración verificada."
+          # 3. Hacemos la petición. Usamos --fail para que falle estrictamente si no hay respuesta.
+          curl -v --fail http://localhost:8080/ || (cat spring-logs.txt && exit 1)
 
       - name: 6. Pruebas de Carga con JMeter (Caja Negra)
         run: |
