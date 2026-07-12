@@ -30,7 +30,7 @@ public class CicloInventarioIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper; 
 
-    private final String productoPruebaId = "RELOJ-INTEGRACION-99";
+    private final String productoPruebaId = "P1";
     
     // Rutas reales definidas por los controladores
     private final String RUTA_COMPRAS = "/api/ordenes";
@@ -40,10 +40,9 @@ public class CicloInventarioIntegrationTest {
     @Order(1)
     public void test01_DebeSincronizarAbastecimientoHU1ConVentaHU2() throws Exception {
         Map<String, Object> ordenCompra = new HashMap<>();
-        ordenCompra.put("productoId", productoPruebaId);
-        ordenCompra.put("proveedorId", "PROV-001");
-        ordenCompra.put("cantidad", 50);          
-        ordenCompra.put("precioCosto", 120.00);    
+        ordenCompra.put("producto", productoPruebaId);
+        ordenCompra.put("proveedor", "PROV-001");
+        ordenCompra.put("cantidadDeProducto", "50");
 
         long startTimeHU1 = System.currentTimeMillis();
 
@@ -57,11 +56,10 @@ public class CicloInventarioIntegrationTest {
         assertTrue(durationHU1 < 5000, "La HU 1 excedió el límite de rendimiento de 5 segundos");
 
         Map<String, Object> venta = new HashMap<>();
-        venta.put("productoId", productoPruebaId);
-        venta.put("cantidad", 15);                 
-        venta.put("precioVenta", 250.00);
-        venta.put("cliente", "Valeria Leon");
-        venta.put("metodoPago", "Visa");           
+        venta.put("idProducto", productoPruebaId);
+        venta.put("monto", 250.00);
+        venta.put("idUsuario", "U123");
+        venta.put("direccion", "Av. Bolívar 123");
 
         long startTimeHU2 = System.currentTimeMillis();
 
@@ -79,11 +77,10 @@ public class CicloInventarioIntegrationTest {
     @Order(2)
     public void test02_DebeRechazarVentaEnHU2SiSuperaElStockDisponible() throws Exception {
         Map<String, Object> ventaInvalida = new HashMap<>();
-        ventaInvalida.put("productoId", productoPruebaId);
-        ventaInvalida.put("cantidad", 100);        
-        ventaInvalida.put("precioVenta", 250.00);
-        ventaInvalida.put("cliente", "Daniel Verschuur");
-        ventaInvalida.put("metodoPago", "Mastercard");
+        ventaInvalida.put("idProducto", productoPruebaId);
+        ventaInvalida.put("monto", 250.00);
+        ventaInvalida.put("idUsuario", "U999");
+        ventaInvalida.put("direccion", "Calle Falsa 123");
 
         mockMvc.perform(post(RUTA_VENTAS)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -100,9 +97,9 @@ public class CicloInventarioIntegrationTest {
     @Order(3)
     public void test03_DebeGarantizarConsistenciaDeMonedaUnicaEnAmbasEstructuras() throws Exception {
         Map<String, Object> ordenVerificacion = new HashMap<>();
-        ordenVerificacion.put("productoId", productoPruebaId);
-        ordenVerificacion.put("cantidad", 1);
-        ordenVerificacion.put("precioCosto", 10.00);
+        ordenVerificacion.put("producto", productoPruebaId);
+        ordenVerificacion.put("proveedor", "PROV-001");
+        ordenVerificacion.put("cantidadDeProducto", "1");
 
         mockMvc.perform(post(RUTA_COMPRAS)
                 .contentType(MediaType.APPLICATION_JSON)
