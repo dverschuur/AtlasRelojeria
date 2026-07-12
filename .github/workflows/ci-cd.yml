@@ -28,16 +28,17 @@ jobs:
         run: mvn -f backend/pom.xml test -Dtest=PerformanceUnitTests
         continue-on-error: true
         
-      - name: 5. Prueba de Integración (Caja Gris) - Rol DevOp
-        run: |
-          # 1. Levantamos el servidor y guardamos el registro en un archivo de texto
-          mvn -f backend/pom.xml spring-boot:run > spring-logs.txt 2>&1 &
-          
-          # 2. Le damos 30 segundos para que arranque
-          sleep 30
-          
-          # 3. Hacemos la petición apuntando al puerto 8081.
-          curl -v http://localhost:8081/ || (cat spring-logs.txt && exit 1)
+      - name: 5. Pruebas de Integración Funcional (Caja Gris) - Rol DevOp
+        # Reemplazamos el script manual del servidor/curl por la suite automatizada de JUnit 5
+        run: mvn -f backend/pom.xml test -Dtest=CicloInventarioIntegrationTest
+
+      - name: 5.5 Guardar Reporte de Integración JUnit para el Líder de Métricas
+        # Este paso se ejecuta SIEMPRE para guardar evidencia, incluso si las pruebas fallan
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Reporte-Integracion-JUnit
+          path: backend/target/surefire-reports/
           
       - name: 6. Pruebas de Carga con JMeter (Caja Negra)
         run: |
