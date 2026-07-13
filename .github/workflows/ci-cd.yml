@@ -48,7 +48,14 @@ jobs:
           
           # Condicional: Si el tester ya subió el archivo, lo corre. Si no, lo salta.
           if [ -f tests-performance/plan-de-carga.jmx ]; then
-            echo "Archivo de JMeter detectado. Ejecutando pruebas..."
+            echo "Archivo de JMeter detectado. Levantando el servidor de Atlas..."
+            
+            # 1. Asegurarnos de que el backend esté vivo en este mismo paso
+            mvn -f backend/pom.xml spring-boot:run > spring-logs-jmeter.txt 2>&1 &
+            sleep 30 # Le damos 30 segundos al servidor para que inicie por completo
+            
+            echo "Ejecutando pruebas de carga masiva..."
+            # 2. Ejecutar JMeter (El Header Content-Type ya está en el .jmx)
             apache-jmeter-5.6.3/bin/jmeter -n -t tests-performance/plan-de-carga.jmx -l resultados.jtl -e -o ./reporte-jmeter
           else
             echo "El tester aun no ha subido el archivo plan-de-carga.jmx. Saltando paso..."
