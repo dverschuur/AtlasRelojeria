@@ -25,15 +25,16 @@ jobs:
         run: mvn -f backend/pom.xml clean compile
 
       - name: 4. Ejecutar Pruebas Unitarias (Caja Blanca)
+        id: unitarias # Asignamos ID
         run: mvn -f backend/pom.xml test -Dtest=PerformanceUnitTests
         continue-on-error: true
         
-      - name: 5. Pruebas de Integración Funcional (Caja Gris) - Rol DevOp
-        # Reemplazamos el script manual del servidor/curl por la suite automatizada de JUnit 5
+      - name: 5. Pruebas de Integración Funcional (Caja Gris)
+        id: integracion 
         run: mvn -f backend/pom.xml test -Dtest=CicloInventarioIntegrationTest
+        continue-on-error: true # CRÍTICO: Permite que JMeter se ejecute aunque la integración falle
 
       - name: 5.5 Guardar Reporte de Integración JUnit para el Líder de Métricas
-        # Este paso se ejecuta SIEMPRE para guardar evidencia, incluso si las pruebas fallan
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -41,30 +42,76 @@ jobs:
           path: backend/target/surefire-reports/
           
       - name: 6. Pruebas de Carga con JMeter (Caja Negra)
+        id: carga # Asignamos ID
         run: |
-          # Descargamos e instalamos JMeter en la nube
           wget https://dlcdn.apache.org//jmeter/binaries/apache-jmeter-5.6.3.tgz
           tar -xzf apache-jmeter-5.6.3.tgz
           
-          # Condicional: Si el tester ya subió el archivo, lo corre. Si no, lo salta.
           if [ -f tests-performance/plan-de-carga.jmx ]; then
             echo "Archivo de JMeter detectado. Levantando el servidor de Atlas..."
-            
-            # 1. Asegurarnos de que el backend esté vivo en este mismo paso
             mvn -f backend/pom.xml spring-boot:run > spring-logs-jmeter.txt 2>&1 &
-            sleep 30 # Le damos 30 segundos al servidor para que inicie por completo
-            
+            sleep 30 
             echo "Ejecutando pruebas de carga masiva..."
-            # 2. Ejecutar JMeter (El Header Content-Type ya está en el .jmx)
             apache-jmeter-5.6.3/bin/jmeter -n -t tests-performance/plan-de-carga.jmx -l resultados.jtl -e -o ./reporte-jmeter
           else
             echo "El tester aun no ha subido el archivo plan-de-carga.jmx. Saltando paso..."
           fi
+        continue-on-error: true
 
       - name: 7. Guardar Dashboards de JMeter para el Líder de Métricas
-        # Este paso solo se ejecuta si la carpeta reporte-jmeter existe
-        if: hashFiles('reporte-jmeter/*') != ''
+        if: always() # Cambiado a always() para garantizar que guarde si JMeter corrió
         uses: actions/upload-artifact@v4
         with:
           name: Dashboard-Rendimiento
           path: ./reporte-jmeter
+
+      - name: 8. Registrar métricas detalladas en Google Sheets (Rol DevOp -> Métricas)
+        if: always()
+        run: |
+          python3 -c "
+          import xml.etree.ElementTree as ET
+          import urllib.request, urllib.parse, glob
+          from datetime import datetime
+
+          def evaluar_estado(case):
+              return '0' if case.find('failure') is not None or case.find('error') is not None else '1'
+
+          t1 = t2 = t3 = ut1 = ut2 = ut3 = ut4 = 'No ejecutado'
+
+          # Leer Integración
+          xml_int = glob.glob('backend/target/surefire-reports/TEST-*CicloInventarioIntegrationTest.xml')
+          if xml_int:
+              for case in ET.parse(xml_int[0]).getroot().findall('testcase'):
+                  nom = case.get('name')
+                  if 'test01' in nom: t1 = evaluar_estado(case)
+                  elif 'test02' in nom: t2 = evaluar_estado(case)
+                  elif 'test03' in nom: t3 = evaluar_estado(case)
+
+          # Leer Unitarias
+          xml_ut = glob.glob('backend/target/surefire-reports/TEST-*PerformanceUnitTests.xml')
+          if xml_ut:
+              for case in ET.parse(xml_ut[0]).getroot().findall('testcase'):
+                  nom = case.get('name')
+                  if 'testLectura' in nom: ut1 = evaluar_estado(case)
+                  elif 'testEscritura' in nom: ut2 = evaluar_estado(case)
+                  elif 'testCalcular' in nom: ut3 = evaluar_estado(case)
+                  elif 'testFiltrado' in nom: ut4 = evaluar_estado(case)
+
+          url = '${{ secrets.WEBHOOK_GOOGLE_SHEETS }}'
+          # La variable github.server_url/github.repository/actions/runs/github.run_id genera el link directo
+          link_evidencia = '${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}'
+
+          data = urllib.parse.urlencode({
+              'fecha': datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+              'rama': '${{ github.ref_name }}',
+              'autor': '${{ github.actor }}',
+              'estado': '${{ job.status }}',
+              't1': t1, 't2': t2, 't3': t3,
+              'ut1': ut1, 'ut2': ut2, 'ut3': ut3, 'ut4': ut4,
+              'carga': '${{ steps.carga.outcome }}',
+              'url': link_evidencia
+          }).encode('utf-8')
+          
+          urllib.request.urlopen(urllib.request.Request(url, data=data))
+          print('Dashboard alimentado exitosamente.')
+          "
