@@ -65,7 +65,7 @@ class PerformanceUnitTests {
         assertNotNull(resultado, "La lista de productos no debe ser nula");
         assertEquals(1_000, resultado.size(), "Deben cargarse los 1.000 productos simulados");
         // Umbral exigente: la deserialización en frío de 1.000 registros supera este límite
-        assertTrue(duration < 50,
+        assertTrue(duration < 25,
                 "UT-PER-01 FALLO DE RENDIMIENTO: La deserialización de 1.000 registros tardó más de 50ms (" + duration + "ms) "
                 + "— el arranque en frío de Jackson supera el umbral de eficiencia aceptable");
     }
