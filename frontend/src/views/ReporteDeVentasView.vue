@@ -1,53 +1,83 @@
 <template>
-  <div class="historial-container">
-    <!-- Selector de fecha -->
-    <div class="fecha-selector">
-      <label for="fechaSeleccionada">Seleccionar fecha:</label>
-      <input 
-        type="date" 
-        id="fechaSeleccionada" 
-        v-model="fechaSeleccionada" 
-        @change="cambiarFecha"
-        class="date-input"
-      />
-      <button @click="irADiaActual" class="btn-hoy">Buscar</button>
+  <div class="reporte-page">
+    <div class="page-header">
+      <div>
+        <h2 class="page-title">Reporte de Ventas</h2>
+        <p class="page-subtitle">Analiza las ventas por fecha</p>
+      </div>
     </div>
 
-    <!-- Resumen de ventas de la fecha seleccionada -->
-    <div class="resumen-ventas">
-      <span><strong>Fecha seleccionada:</strong> {{ fechaSeleccionadaFormateada }}</span>
-      <span><strong>Ventas totales:</strong> {{ ventasFiltradas.length }}</span>
-      <span><strong>Monto total:</strong> {{ formatoMoneda(montoTotalDelDia) }}</span>
+    <!-- Selector de fecha -->
+    <div class="filtro-fecha">
+      <div class="fecha-field">
+        <label for="fechaSeleccionada">📅 Seleccionar fecha</label>
+        <input
+          type="date"
+          id="fechaSeleccionada"
+          v-model="fechaSeleccionada"
+          @change="cambiarFecha"
+        />
+      </div>
+      <button @click="irADiaActual" class="btn-buscar">Buscar</button>
     </div>
-    <h2>Reporte de Ventas</h2>
-    <div class="tabla-ventas">
-      <table>
+
+    <!-- Resumen KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-icon kpi-icon--date"></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Fecha seleccionada</div>
+          <div class="kpi-value">{{ fechaSeleccionadaFormateada || '—' }}</div>
+        </div>
+      </div>
+      <div class="kpi-card accent">
+        <div class="kpi-icon kpi-icon--sales"></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Ventas del día</div>
+          <div class="kpi-value">{{ ventasFiltradas.length }}</div>
+        </div>
+      </div>
+      <div class="kpi-card gold">
+        <div class="kpi-icon kpi-icon--money"></div>
+        <div class="kpi-body">
+          <div class="kpi-label">Monto total</div>
+          <div class="kpi-value">${{ formatoMoneda(montoTotalDelDia) }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="tabla-wrapper">
+      <table class="tabla-premium">
         <thead>
-        <tr>
-          <th>ID Venta</th>
-          <th>ID Usuario</th>
-          <th>ID Producto</th>
-          <th>Dirección</th>
-          <th>Fecha</th>
-          <th>Monto</th>
-        </tr>
+          <tr>
+            <th>ID Venta</th>
+            <th>ID Usuario</th>
+            <th>ID Producto</th>
+            <th>Dirección</th>
+            <th>Fecha</th>
+            <th>Monto</th>
+          </tr>
         </thead>
         <tbody>
-        <tr v-for="venta in ventasFiltradas" :key="venta.fecha">
-          <td>{{ venta.idVenta }}</td>
-          <td>{{ venta.idUsuario }}</td>
-          <td>{{ venta.idProducto }}</td>
-          <td>{{ venta.direccion }}</td>
-          <td>{{ formatearFecha(venta.fecha) }}</td>
-          <td>{{ venta.monto }}</td>
-        </tr>
+          <tr v-for="venta in ventasFiltradas" :key="venta.fecha">
+            <td class="td-id">{{ venta.idVenta }}</td>
+            <td>{{ venta.idUsuario }}</td>
+            <td>{{ venta.idProducto }}</td>
+            <td>{{ venta.direccion }}</td>
+            <td class="td-fecha">{{ formatearFecha(venta.fecha) }}</td>
+            <td class="td-monto">${{ venta.monto }}</td>
+          </tr>
         </tbody>
       </table>
     </div>
 
-    <div v-if="ventasFiltradas.length === 0" class="no-results">
-      No hubo ventas el {{ fechaSeleccionadaFormateada }}
-    </div>
+    <transition name="fade-slide">
+      <div v-if="ventasFiltradas.length === 0" class="empty-state">
+        <div class="empty-icon"></div>
+        <p>No hubo ventas el <strong>{{ fechaSeleccionadaFormateada || 'día seleccionado' }}</strong>.</p>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -70,7 +100,7 @@ export default {
   mounted() {
     this.cargarVentas();
     this.setearFechaHoy();
-    this.fechaSeleccionada = this.fechaHoy; // Inicialmente muestra el día de hoy
+    this.fechaSeleccionada = this.fechaHoy;
     this.fechaSeleccionadaFormateada = this.fechaHoyFormateada;
   },
   methods: {
@@ -83,12 +113,8 @@ export default {
       this.fechaHoyFormateada = `${dd}/${mm}/${yyyy}`;
     },
     cambiarFecha() {
-      // Formatear la fecha seleccionada para mostrar
-      // Usar el string de fecha directamente para evitar problemas de zona horaria
       const [yyyy, mm, dd] = this.fechaSeleccionada.split('-');
       this.fechaSeleccionadaFormateada = `${dd}/${mm}/${yyyy}`;
-      
-      // Filtrar ventas para la fecha seleccionada
       this.ventasFiltradas = this.filtrarVentasPorFecha(this.ventas, this.fechaSeleccionada);
       this.montoTotalDelDia = this.calcularMontoTotal(this.ventasFiltradas);
     },
@@ -101,7 +127,6 @@ export default {
     async cargarVentas() {
       try {
         const response = await axios.get('http://localhost:8081/api/ventas');
-        console.log('Ventas recibidas:', response.data);
         this.ventas = response.data;
         this.ventasFiltradas = this.filtrarVentasPorFecha(response.data, this.fechaSeleccionada);
         this.montoTotalDelDia = this.calcularMontoTotal(this.ventasFiltradas);
@@ -112,36 +137,22 @@ export default {
     filtrarVentasPorFecha(ventas, fecha) {
       return ventas.filter(venta => venta.fecha === fecha);
     },
-    filtrarVentasDeHoy(ventas) {
-      const hoy = new Date();
-      const yyyy = hoy.getFullYear();
-      const mm = String(hoy.getMonth() + 1).padStart(2, '0');
-      const dd = String(hoy.getDate()).padStart(2, '0');
-      const fechaHoy = `${yyyy}-${mm}-${dd}`;
-      return ventas.filter(venta => venta.fecha === fechaHoy);
-    },
     calcularMontoTotal(ventas) {
       return ventas.reduce((total, venta) => {
-        // Si el monto viene como string, conviértelo a número
         const monto = typeof venta.monto === 'string' ? parseFloat(venta.monto) : venta.monto;
         return total + (isNaN(monto) ? 0 : monto);
       }, 0);
     },
     formatearFecha(fecha) {
-      // Si la fecha es un string tipo 'YYYY-MM-DD'
       if (typeof fecha === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(fecha)) {
         const [anio, mes, dia] = fecha.split('-');
         return `${dia}/${mes}/${anio}`;
       }
-      // Si la fecha es un array [año, mes, día]
       if (Array.isArray(fecha) && fecha.length === 3) {
         const [anio, mes, dia] = fecha;
-        // Asegura dos dígitos para día y mes
-        return `${String(dia).padStart(2, '0')}/${String(mes).padStart(2, '0')}/${anio}`;
+        return `${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${anio}`;
       }
-      // Fallback para otros formatos de fecha
-      const date = new Date(fecha);
-      return date.toLocaleDateString('es-ES');
+      return new Date(fecha).toLocaleDateString('es-ES');
     },
     formatoMoneda(valor) {
       if (typeof valor !== 'number') return valor;
@@ -157,140 +168,269 @@ export default {
 </script>
 
 <style scoped>
-.historial-container {
-  padding: 20px;
+.reporte-page {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 32px 24px 48px;
 }
 
-h2 {
-  color: #333;
-  text-align: center;
-  margin-bottom: 20px;
+.page-header {
+  margin-bottom: 28px;
 }
 
-.fecha-selector {
+.page-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--green-900);
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+}
+
+/* ── Filtro fecha ── */
+.filtro-fecha {
   display: flex;
-  align-items: center;
-  gap: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 16px 24px;
-  margin-bottom: 20px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  align-items: flex-end;
+  gap: 12px;
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
 }
 
-.fecha-selector label {
-  font-weight: bold;
-  color: #333;
-  margin: 0;
+.fecha-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-.date-input {
-  padding: 8px 12px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  background: white;
+.fecha-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.btn-hoy {
-  padding: 8px 16px;
-  background-color: #0b7d59;
+.fecha-field input[type="date"] {
+  padding: 10px 14px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  background: var(--surface-1);
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.fecha-field input[type="date"]:focus {
+  border-color: var(--green-700);
+  box-shadow: 0 0 0 3px rgba(11, 125, 89, 0.1);
+}
+
+.btn-buscar {
+  padding: 10px 24px;
+  background: linear-gradient(135deg, var(--green-700), var(--green-800));
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
+  transition: transform var(--transition), box-shadow var(--transition);
 }
 
-.btn-hoy:hover {
-  background-color: #095a42;
+.btn-buscar:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(11, 125, 89, 0.3);
 }
 
-.resumen-ventas {
+/* ── KPIs ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.kpi-card {
+  background: var(--surface-0);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 20px 22px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background: #e6f4ef;
-  border-radius: 8px;
-  padding: 16px 24px;
-  margin-bottom: 24px;
-  font-size: 1.1em;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-.resumen-ventas span {
-  margin-right: 20px;
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition);
 }
 
-.tabla-ventas {
+.kpi-card:hover { transform: translateY(-2px); }
+
+.kpi-card.accent {
+  background: linear-gradient(135deg, var(--green-50), var(--green-100));
+  border-color: #b2dfcf;
+}
+
+.kpi-card.gold {
+  background: linear-gradient(135deg, #fffbea, #fff8e1);
+  border-color: #f5e090;
+}
+
+.kpi-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.kpi-icon--date {
+  background: rgba(11, 125, 89, 0.08);
+  border-color: rgba(11, 125, 89, 0.2);
+}
+.kpi-icon--date::before {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border: 1.5px solid var(--green-700);
+  border-radius: 3px;
+}
+
+.kpi-icon--sales {
+  background: rgba(11, 125, 89, 0.12);
+  border-color: rgba(11, 125, 89, 0.25);
+}
+.kpi-icon--sales::before {
+  content: '';
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: var(--green-700);
+  box-shadow: 0 -6px 0 var(--green-700), 0 -12px 0 rgba(11,125,89,0.4);
+}
+
+.kpi-icon--money {
+  background: rgba(201, 168, 76, 0.15);
+  border-color: rgba(201, 168, 76, 0.35);
+}
+.kpi-icon--money::before {
+  content: '$';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--gold);
+  display: block;
+  text-align: center;
+  line-height: 40px;
+}
+
+.kpi-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.kpi-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--green-900);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Tabla (mismo estilo compartido) ── */
+.tabla-wrapper {
   overflow-x: auto;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  border: 1px solid var(--border);
 }
 
-table {
+.tabla-premium {
   width: 100%;
   border-collapse: collapse;
-  background-color: white;
+  background: var(--surface-0);
+  font-size: 0.88rem;
 }
 
-th, td {
-  padding: 12px 15px;
+.tabla-premium thead th {
+  background: linear-gradient(135deg, var(--green-800), var(--green-700));
+  color: rgba(255,255,255,0.95);
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 14px 16px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  white-space: nowrap;
 }
 
-th {
-  background-color: #0b7d59;
-  color: white;
-  font-weight: bold;
+.tabla-premium tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
 }
 
-tr:nth-child(even) {
-  background-color: #f9f9f9;
+.tabla-premium tbody tr:last-child { border-bottom: none; }
+.tabla-premium tbody tr:hover { background: var(--green-50); }
+
+.tabla-premium tbody td {
+  padding: 13px 16px;
+  color: var(--text-primary);
+  vertical-align: middle;
 }
 
-tr:hover {
-  background-color: #f5f5f5;
+.td-id {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.8rem;
 }
 
-.no-results {
+.td-fecha {
+  color: var(--text-muted);
+  font-size: 0.83rem;
+}
+
+.td-monto {
+  font-weight: 700;
+  color: var(--green-700);
+}
+
+/* ── Empty ── */
+.empty-state {
   text-align: center;
-  padding: 20px;
-  color: #666;
-  font-style: italic;
+  padding: 60px 20px;
+  color: var(--text-muted);
 }
+
+.empty-icon { font-size: 2.5rem; margin-bottom: 12px; opacity: 0.5; }
+
+/* ── Transitions ── */
+.fade-slide-enter-active, .fade-slide-leave-active { transition: all 0.3s ease; }
+.fade-slide-enter-from, .fade-slide-leave-to { opacity: 0; transform: translateY(8px); }
 
 @media (max-width: 768px) {
-  .fecha-selector {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-  
-  .fecha-selector label {
-    text-align: center;
-  }
-  
-  .resumen-ventas {
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-  }
-  
-  .resumen-ventas span {
-    margin-right: 0;
-  }
-  
-  .tabla-ventas {
-    font-size: 14px;
-  }
-
-  th, td {
-    padding: 8px;
-  }
+  .filtro-fecha { flex-direction: column; align-items: stretch; }
+  .btn-buscar { width: 100%; }
 }
 </style>
